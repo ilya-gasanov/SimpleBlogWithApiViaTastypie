@@ -17,7 +17,7 @@ class UserResource(ModelResource):
 
 
 class EntryResource(ModelResource):
-    #owner= fields.RelatedField(UserResource,'owner')
+
     owner = fields.ForeignKey(UserResource,'owner')
 
     class Meta:
@@ -26,9 +26,7 @@ class EntryResource(ModelResource):
         authorization = DjangoAuthorization()
         authentication = BasicAuthentication()
         validation = Validation()
-        #include_resource_uri = False
         serializer= Serializer()
-        # allowed_methods = ['get','put','post','delete']
         list_allowed_methods = ['get','post']
         detail_allowed_methods = ['get','put','delete','patch']
 
@@ -37,8 +35,5 @@ class EntryResource(ModelResource):
         return super(EntryResource, self).obj_create(bundle, **kwargs)
 
     def dehydrate(self, bundle):
-        bundle.data['owner'] = User.get_username(bundle.request.user)
+        bundle.data['owner'] = User.get_username(bundle.obj.owner)
         return bundle
-
-
-
