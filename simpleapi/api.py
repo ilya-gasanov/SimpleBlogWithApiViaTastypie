@@ -36,4 +36,10 @@ class EntryResource(ModelResource):
         bundle.data["owner"] = bundle.request.user
         return super(EntryResource, self).obj_create(bundle, **kwargs)
 
+    def dehydrate(self, bundle):
+        # Include the request IP in the bundle.
+        bundle.data['owner'] = User.get_username(bundle.request.user)
+        return bundle
+
+
 
